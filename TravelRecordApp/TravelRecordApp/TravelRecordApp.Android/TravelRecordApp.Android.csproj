@@ -52,7 +52,7 @@
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.5.231</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.1.0.697729" />
+    <PackageReference Include="Xamarin.Forms" Version="3.2.0.871581" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2.1" />
@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TravelRecordApp\TravelRecordApp.csproj">
-      <Project>{572F2FAD-D1A7-4640-BF16-B7694273209B}</Project>
+      <Project>{EEB13271-04DF-4144-83EF-82203A7B7386}</Project>
       <Name>TravelRecordApp</Name>
     </ProjectReference>
   </ItemGroup>

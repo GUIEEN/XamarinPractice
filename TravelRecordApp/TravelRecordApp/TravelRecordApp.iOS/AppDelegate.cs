@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using Foundation;
@@ -23,6 +24,15 @@ namespace TravelRecordApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+
+            // add db
+            string dbName = "travel_db.sqlite";
+            // In iOS, path should be Library.
+            string folderPath = Path.Combine(
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "..", "Library");
+            string fullPath = Path.Combine(folderPath, dbName);
+
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
