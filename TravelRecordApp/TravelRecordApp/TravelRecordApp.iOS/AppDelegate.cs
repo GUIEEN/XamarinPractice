@@ -33,7 +33,7 @@ namespace TravelRecordApp.iOS
             string fullPath = Path.Combine(folderPath, dbName);
 
 
-            LoadApplication(new App());
+            LoadApplication(new App(fullPath));
 
             return base.FinishedLaunching(app, options);
         }

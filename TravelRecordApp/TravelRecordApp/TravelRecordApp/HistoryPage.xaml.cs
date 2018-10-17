@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SQLite;
+using TravelRecordApp.Model;
 
 namespace TravelRecordApp
 {
@@ -16,5 +18,16 @@ namespace TravelRecordApp
 		{
 			InitializeComponent ();
 		}
-	}
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation);
+            conn.CreateTable<Post>(); // This method creates table only if it doesn't exist
+            var posts = conn.Table<Post>().ToList();
+            conn.Close();
+
+        }
+    }
 }

@@ -323,7 +323,7 @@ namespace TravelRecordApp
               string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
               string fullPath = Path.Combine(folderPath, dbName);
 
-              LoadApplication(new App());
+              LoadApplication(new App(fullPath));
           }
       }
   }
@@ -348,10 +348,125 @@ namespace TravelRecordApp
                   System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "..", "Library");
               string fullPath = Path.Combine(folderPath, dbName);
 
-              LoadApplication(new App());
+              LoadApplication(new App(fullPath));
 
               return base.FinishedLaunching(app, options);
           }
       }
   }
   ```
+
+## SQLite Attributes
+
+// Model/Post.cs
+
+```cs
+using SQLite;
+namespace TravelRecordApp.Model
+{
+    public class Post
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        [MaxLength(250)]
+        public string Experience { get; set; }
+
+    }
+}
+```
+
+## Inserting into Database
+
+- NewTravelPage
+
+  ```xml
+  <?xml version="1.0" encoding="utf-8" ?>
+  <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              x:Class="TravelRecordApp.NewTravelPage">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save"
+                    Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <Entry x:Name="experienceEntry"
+                Placeholder="Write your experienct" />
+        </StackLayout>
+    </ContentPage.Content>
+  </ContentPage>
+  ```
+
+  ```cs
+  using Xamarin.Forms;
+  using Xamarin.Forms.Xaml;
+  using TravelRecordApp.Model;
+  using SQLite;
+
+  namespace TravelRecordApp
+  {
+      [XamlCompilation(XamlCompilationOptions.Compile)]
+      public partial class NewTravelPage : ContentPage
+      {
+          public NewTravelPage ()
+          {
+              InitializeComponent ();
+          }
+
+          public void ToolbarItem_Clicked(object sender, EventArgs e)
+          {
+              Post post = new Post()
+              {
+                  Experience = experienceEntry.Text
+              };
+
+              SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation);
+              conn.CreateTable<Post>();
+              int rows = conn.Insert(post);
+              conn.Close();
+
+              if (rows > 0)
+                  DisplayAlert("Success", "Experience successfully insterted", "OK");
+              else
+                  DisplayAlert("Failed", "Experience failed to be insterted", "OK");
+          }
+
+      }
+  }
+  ```
+
+  ![](noteImages/2018-10-17-00-43-21.png)
+
+## Read from the Database
+
+- Page.OnAppearing Method
+- https://docs.microsoft.com/en-us/dotnet/api/xamarin.forms.page.onappearing?view=xamarin-forms
+
+  ```cs
+  namespace TravelRecordApp
+  {
+      [XamlCompilation(XamlCompilationOptions.Compile)]
+      public partial class HistoryPage : ContentPage
+      {
+          public HistoryPage ()
+          {
+              InitializeComponent ();
+          }
+
+          protected override void OnAppearing()
+          {
+              base.OnAppearing();
+
+              SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation);
+              conn.CreateTable<Post>(); // This method creates table only if it doesn't exist
+              var posts = conn.Table<Post>().ToList();
+              conn.Close();
+
+          }
+      }
+  }
+  ```
+
+![](noteImages/2018-10-17-00-54-53.png)
